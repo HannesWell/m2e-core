@@ -36,7 +36,7 @@ public class MavenTargetTreeContentProvider implements ITreeContentProvider {
 			List<Object> childs = new ArrayList<>();
 			List<MavenTargetDependency> roots = location.getRoots();
 			if (roots.size() == 1) {
-				childs.addAll(Arrays.asList(getDependencyChilds(roots.get(0), parentElement)));
+				childs.addAll(Arrays.asList(getDependencyChilds(roots.get(0))));
 			} else {
 				childs.addAll(roots);
 			}
@@ -49,22 +49,21 @@ public class MavenTargetTreeContentProvider implements ITreeContentProvider {
 			DependencyNode[] dependencyNodes = dependency.getChildren().stream()
 					.filter(d -> d.getArtifact().getFile() != null).toArray(DependencyNode[]::new);
 			for (DependencyNode dependencyNode : dependencyNodes) {
-				dependencyNode.setData(MavenTargetLocation.DEPENDENCYNODE_PARENT, parentElement);
+				dependencyNode.setData(MavenTargetLocation.DEPENDENCYNODE_PARENT, dependency);
 			}
 			return dependencyNodes;
 		} else if (parentElement instanceof MavenTargetDependency dependency) {
-			return getDependencyChilds(dependency, parentElement);
+			return getDependencyChilds(dependency);
 		}
 		return new Object[0];
 	}
 
-	private Object[] getDependencyChilds(MavenTargetDependency targetDependency, Object parentElement) {
+	private Object[] getDependencyChilds(MavenTargetDependency targetDependency) {
 
 		List<DependencyNode> nodes = targetDependency.getDependencyNodes();
 		if (nodes != null) {
 			for (DependencyNode dependencyNode : nodes) {
 				if (dependencyNode.getData().containsKey(MavenTargetLocation.DEPENDENCYNODE_ROOT)) {
-					dependencyNode.setData(MavenTargetLocation.DEPENDENCYNODE_PARENT, parentElement);
 					return getChildren(dependencyNode);
 				}
 			}
