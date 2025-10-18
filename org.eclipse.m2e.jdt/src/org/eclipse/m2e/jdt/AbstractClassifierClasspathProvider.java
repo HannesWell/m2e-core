@@ -57,6 +57,7 @@ public abstract class AbstractClassifierClasspathProvider
   protected void addTestFolder(Set<IRuntimeClasspathEntry> runtimeClasspath, IMavenProjectFacade mavenProjectFacade,
       IProgressMonitor monitor, int classpathProperty) throws CoreException {
     Build build = mavenProjectFacade.getMavenProject(monitor).getBuild();
+
     final Set<IPath> allTestClasses = new LinkedHashSet<>();
     allTestClasses.add(mavenProjectFacade.getProjectRelativePath(build.getTestOutputDirectory()));
     addFolders(runtimeClasspath, mavenProjectFacade.getProject(), allTestClasses, classpathProperty);
